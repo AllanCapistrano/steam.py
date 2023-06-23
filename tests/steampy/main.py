@@ -1,11 +1,11 @@
 from sys import path
 path.append("../../") 
 
-from steampy import Crawler
+from steampy import Crawler, CrawlerSpecials
 
 if __name__ == "__main__":
-    crawler: Crawler = Crawler()
+    crawler: Crawler = CrawlerSpecials()
 
-    response = crawler.reqUrl("https://store.steampowered.com/search/?specials=1")
+    response = crawler.getGamesDiscounts("https://store.steampowered.com/search/?specials=1")
     
-    print(response)
+    print(response, len(response))
