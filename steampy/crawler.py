@@ -3,12 +3,13 @@ from bs4 import BeautifulSoup
 
 class Crawler:
     def reqUrl(self, url: str) -> BeautifulSoup:
-        """Buscar o conteúdo de uma página com base em uma URL.
+        """Return the page content by the URL..
+        
 
         Parameters
         -----------
         url: :class:`str`
-            Url do site.
+            Website URL.
 
         Returns
         -----------
