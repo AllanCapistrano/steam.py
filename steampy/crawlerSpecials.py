@@ -1,5 +1,7 @@
 from typing import List
 
+from bs4 import BeautifulSoup
+
 from .crawler import Crawler
 
 class CrawlerSpecials(Crawler):
@@ -21,11 +23,12 @@ class CrawlerSpecials(Crawler):
 
         titles: List[str]       = []
         amount_game_titles: int = self.__verify_amount__(amount_game_titles)
+        soup: BeautifulSoup     = self.reqUrl(url).find_all("span", class_="title")
 
-        for title in self.reqUrl(url).find_all("span", class_="title"):
-            titles.append(title.contents[0])
+        for index in range(0, amount_game_titles):
+            titles.append(soup[index].contents[0])
 
-        return titles[0: amount_game_titles]
+        return titles
 
     def getGamesDiscounts(self, url: str, amount_game_discounts: int = 50) -> List[str | None]:
         """ Return the games discounts that are in 'Specials' list.
@@ -45,15 +48,16 @@ class CrawlerSpecials(Crawler):
 
         discounts: List[str]       = []
         amount_game_discounts: int = self.__verify_amount__(amount_game_discounts)
+        soup: BeautifulSoup        = self.reqUrl(url).find_all("div", class_="search_discount")
 
-        for discount_div in self.reqUrl(url).find_all("div", class_="search_discount"):
-            if (len(discount_div.contents) == 3):
-                discount = discount_div.contents[1]
+        for index in range(0, amount_game_discounts):
+            if (len(soup[index].contents) == 3):
+                discount = soup[index].contents[1]
                 discounts.append(discount.contents[0])
             else:
                 discounts.append(None)
 
-        return discounts[0: amount_game_discounts]
+        return discounts
 
     def __verify_amount__(self, amount) -> int:
         """ Check whether the amount parameter is valid or not.
