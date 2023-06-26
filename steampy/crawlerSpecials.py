@@ -6,7 +6,7 @@ from .crawler import Crawler
 from .utils import remove_extra_whitespace
 
 class CrawlerSpecials(Crawler):
-    def getGamesTitles(
+    def get_games_titles(
         self, 
         url: str, 
         amount_games_titles: int = 50, 
@@ -41,7 +41,7 @@ class CrawlerSpecials(Crawler):
 
         return titles
 
-    def getGamesDiscounts(self, url: str, amount_games_discounts: int = 50) -> List[str | None]:
+    def get_games_discounts(self, url: str, amount_games_discounts: int = 50) -> List[str | None]:
         """ Return the games discounts that are in 'Specials' list.
 
         Parameters
@@ -70,7 +70,7 @@ class CrawlerSpecials(Crawler):
 
         return discounts
 
-    def getGamesPrices(self, url: str, amount_games_prices: int = 50) -> (List[str | None], List[str | None]):
+    def get_games_prices(self, url: str, amount_games_prices: int = 50) -> (List[str | None], List[str | None]):
         """ Return the games old and discount prices that are in 'Specials' list.
 
         Parameters
