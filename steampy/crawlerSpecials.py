@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 
 from .crawler import Crawler
 from .utils import remove_extra_whitespace
+from .services import is_available_language, format_currency
 
 class CrawlerSpecials(Crawler):
     def get_games_titles(
@@ -54,7 +55,7 @@ class CrawlerSpecials(Crawler):
             Specials URL.
 
         amount_games_discounts: :class:`int`
-            The number of game discounts. The default is `50`.
+            (Optional) The number of game discounts. The default is `50`.
 
         Returns
         -------
@@ -82,7 +83,8 @@ class CrawlerSpecials(Crawler):
     def get_games_prices(
         self, 
         url: str, 
-        amount_games_prices: int = 50
+        amount_games_prices: int = 50,
+        currency: str = "USD"
     ) -> (List[str | None], List[str | None]):
         """ Return the games old and discount prices that are in 'Specials' list.
 
@@ -92,7 +94,10 @@ class CrawlerSpecials(Crawler):
             Specials URL.
 
         amount_games_prices: :class:`int`
-            The number of games prices. The default is `50`.
+            (Optional) The number of games prices. The default is `50`.
+
+        currency: :class:`str`
+            (Optional) Request currency.
 
         Returns
         -------
@@ -104,14 +109,21 @@ class CrawlerSpecials(Crawler):
         old_prices: List[str]      = []
         discount_prices: List[str] = []
         amount_games_prices: int   = self.__verify_amount__(amount_games_prices)
-        soup: BeautifulSoup        = self.reqUrl(url).find_all("div", class_="search_price")
+
+        url                 = f"{url}&cc={format_currency(currency)}"
+        soup: BeautifulSoup = self.reqUrl(url).find_all(
+                "div", 
+                class_="search_price"
+            )
 
         for index in range(0, amount_games_prices):
             search_price_div: BeautifulSoup = soup[index].contents
             
             if (len(search_price_div) == 4):
                 old_prices.append(search_price_div[1].contents[0].contents[0])
-                discount_prices.append(remove_extra_whitespace(search_price_div[-1]))
+                discount_prices.append(
+                    remove_extra_whitespace(search_price_div[-1])
+                )
             else:
                 old_prices.append(None)
                 discount_prices.append(None)
