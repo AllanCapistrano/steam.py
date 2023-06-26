@@ -23,6 +23,7 @@ def is_available_language(language: str) -> bool:
         czech,
         danish,
         german,
+        english,
         spanish,
         latam,
         greek,
