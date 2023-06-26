@@ -59,7 +59,7 @@ def is_available_currency(currency: str) -> bool:
         if(currency.upper() == available_currency):
             return True
         
-        return False
+    return False
 
 def format_currency(currency: str) -> str:
     """ Formats the currency passed into the format that Steam accepts. If the 
