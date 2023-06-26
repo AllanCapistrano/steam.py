@@ -61,7 +61,7 @@ def is_available_currency(currency: str) -> bool:
         
         return False
 
-def formatCurrency(currency: str) -> str:
+def format_currency(currency: str) -> str:
     """ Formats the currency passed into the format that Steam accepts. If the 
     currency passed is not valid, the default currency is the dollar (USD).
 
