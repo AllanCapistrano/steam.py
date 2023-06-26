@@ -41,7 +41,11 @@ class CrawlerSpecials(Crawler):
 
         return titles
 
-    def get_games_discounts(self, url: str, amount_games_discounts: int = 50) -> List[str | None]:
+    def get_games_discounts(
+        self, 
+        url: str, 
+        amount_games_discounts: int = 50
+    ) -> List[str | None]:
         """ Return the games discounts that are in 'Specials' list.
 
         Parameters
@@ -58,8 +62,13 @@ class CrawlerSpecials(Crawler):
         """
 
         discounts: List[str]        = []
-        amount_games_discounts: int = self.__verify_amount__(amount_games_discounts)
-        soup: BeautifulSoup         = self.reqUrl(url).find_all("div", class_="search_discount")
+        amount_games_discounts: int = self.__verify_amount__(
+            amount_games_discounts
+        )
+        soup: BeautifulSoup = self.reqUrl(url).find_all(
+            "div", 
+            class_="search_discount"
+        )
 
         for index in range(0, amount_games_discounts):
             if (len(soup[index].contents) == 3):
@@ -70,7 +79,11 @@ class CrawlerSpecials(Crawler):
 
         return discounts
 
-    def get_games_prices(self, url: str, amount_games_prices: int = 50) -> (List[str | None], List[str | None]):
+    def get_games_prices(
+        self, 
+        url: str, 
+        amount_games_prices: int = 50
+    ) -> (List[str | None], List[str | None]):
         """ Return the games old and discount prices that are in 'Specials' list.
 
         Parameters
