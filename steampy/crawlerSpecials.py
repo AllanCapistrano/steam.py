@@ -6,7 +6,12 @@ from .crawler import Crawler
 from .utils import remove_extra_whitespace
 
 class CrawlerSpecials(Crawler):
-    def getGamesTitles(self, url: str, amount_games_titles: int = 50) -> List[str]:
+    def getGamesTitles(
+        self, 
+        url: str, 
+        amount_games_titles: int = 50, 
+        language: str = "english"
+    ) -> List[str]:
         """ Return the games titles that are in 'Specials' list.
 
         Parameters
@@ -15,7 +20,10 @@ class CrawlerSpecials(Crawler):
             Specials URL.
 
         amount_games_titles: :class:`int`
-            The number of game titles. The default is `50`.
+            (Optional) The number of game titles. The default is `50`.
+
+        language: :class:`str`
+            (Optional) Request language. The default is `english`.
 
         Returns
         -------
@@ -24,7 +32,9 @@ class CrawlerSpecials(Crawler):
 
         titles: List[str]        = []
         amount_games_titles: int = self.__verify_amount__(amount_games_titles)
-        soup: BeautifulSoup      = self.reqUrl(url).find_all("span", class_="title")
+        
+        url                 = f"{url}&l={language}"
+        soup: BeautifulSoup = self.reqUrl(url).find_all("span", class_="title")
 
         for index in range(0, amount_games_titles):
             titles.append(soup[index].contents[0])

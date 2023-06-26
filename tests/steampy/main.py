@@ -4,8 +4,13 @@ path.append("../../")
 from steampy import Crawler, CrawlerSpecials
 
 if __name__ == "__main__":
+    url: str = "https://store.steampowered.com/search/?specials=1"
+
     crawler: Crawler = CrawlerSpecials()
 
-    response1, response2 = crawler.getGamesPrices("https://store.steampowered.com/search/?specials=1")
+    gp1, gp2 = crawler.getGamesPrices(url)
+
+    gt = crawler.getGamesTitles(url, language="brazilian")
     
-    print(response2, len(response2))
+    print(gt)
+    print(gp2, len(gp2))
