@@ -33,7 +33,10 @@ class CrawlerSpecials(Crawler):
 
         titles: List[str]        = []
         amount_games_titles: int = self.__verify_amount__(amount_games_titles)
-        
+
+        if (not is_available_language(language)):
+            language = "english"
+
         url                 = f"{url}&l={language}"
         soup: BeautifulSoup = self.reqUrl(url).find_all("span", class_="title")
 
