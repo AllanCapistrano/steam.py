@@ -75,7 +75,7 @@ def format_currency(currency: str) -> str:
     :class:`str`
     """
     
-    if(self.currencyExists(currency)):
+    if(is_available_currency(currency)):
         return currency[0:2].lower()
     
     return "us"
