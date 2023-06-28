@@ -82,3 +82,61 @@ class CrawlerNewReleases(Crawler):
                 discounts.append(discount.contents[0])
 
         return discounts
+
+    def get_games_prices(
+        self, 
+        url: str, 
+        amount_games_prices: int = 50,
+        language: str = "english",
+        currency: str = "USD"
+    ) -> (List[str | None], List[str | None]):
+        """ Return the games old and discount prices that are in 'New Releases' 
+        list.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            New Releases URL.
+
+        amount_games_prices: :class:`int`
+            (Optional) The number of games prices. The default is `50`.
+
+        language: :class:`str`
+            (Optional) Request language. The default is `english`.
+
+        currency: :class:`str`
+            (Optional) Request currency.
+
+        Returns
+        -------
+        old_prices: :class:`List[str | None]`
+        
+        discount_prices: :class:`List[str | None]`
+        """
+
+        old_prices: List[str]      = []
+        discount_prices: List[str] = []
+        amount_games_prices: int   = verify_amount(amount_games_prices)
+
+        url                 = f"{url}?l={language}&cc={format_currency(currency)}"
+        soup: BeautifulSoup = self.reqUrl(url).find_all(
+                "div", 
+                class_="tab_item_discount"
+            )
+
+        for index in range(0, amount_games_prices):
+            prices_div = soup[index].contents[-1]
+            
+            if("no_discount" in soup[index].get_attribute_list("class")):
+                discount_price = prices_div.contents[0]
+                
+                old_prices.append(None)
+                discount_prices.append(discount_price.contents[0])
+            else:
+                old_price      = prices_div.contents[0]
+                discount_price = prices_div.contents[1]
+
+                old_prices.append(old_price.contents[0])
+                discount_prices.append(discount_price.contents[0])
+
+        return old_prices, discount_prices
