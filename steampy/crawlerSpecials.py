@@ -3,7 +3,7 @@ from typing import List
 from bs4 import BeautifulSoup
 
 from .crawler import Crawler
-from .utils import remove_extra_whitespace
+from .utils import remove_extra_whitespace, verify_amount
 from .services import is_available_language, format_currency
 
 class CrawlerSpecials(Crawler):
@@ -32,7 +32,7 @@ class CrawlerSpecials(Crawler):
         """
 
         titles: List[str]        = []
-        amount_games_titles: int = self.__verify_amount__(amount_games_titles)
+        amount_games_titles: int = verify_amount(amount_games_titles)
 
         if (not is_available_language(language)):
             language = "english"
@@ -66,7 +66,7 @@ class CrawlerSpecials(Crawler):
         """
 
         discounts: List[str]        = []
-        amount_games_discounts: int = self.__verify_amount__(
+        amount_games_discounts: int = verify_amount(
             amount_games_discounts
         )
         soup: BeautifulSoup = self.reqUrl(url).find_all(
@@ -111,7 +111,7 @@ class CrawlerSpecials(Crawler):
 
         old_prices: List[str]      = []
         discount_prices: List[str] = []
-        amount_games_prices: int   = self.__verify_amount__(amount_games_prices)
+        amount_games_prices: int   = verify_amount(amount_games_prices)
 
         url                 = f"{url}&cc={format_currency(currency)}"
         soup: BeautifulSoup = self.reqUrl(url).find_all(
@@ -132,23 +132,3 @@ class CrawlerSpecials(Crawler):
                 discount_prices.append(None)
 
         return old_prices, discount_prices
-
-
-    def __verify_amount__(self, amount) -> int:
-        """ Check whether the amount parameter is valid or not.
-
-        Parameters
-        ----------
-        amount: :class:`str`
-            amount of something.
-       
-
-        Returns
-        -------
-        :class:`int`
-        """
-        
-        if (amount > 50 or amount <= 0):
-            amount = 50
-
-        return amount
