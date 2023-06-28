@@ -133,7 +133,7 @@ class CrawlerNewReleases(Crawler):
                 original_prices.append(None)
                 discount_prices.append(discount_price.contents[0])
             else:
-                original_price      = prices_div.contents[0]
+                original_price = prices_div.contents[0]
                 discount_price = prices_div.contents[1]
 
                 original_prices.append(original_price.contents[0])
