@@ -109,12 +109,12 @@ class CrawlerNewReleases(Crawler):
 
         Returns
         -------
-        old_prices: :class:`List[str | None]`
+        original_prices: :class:`List[str | None]`
         
         discount_prices: :class:`List[str | None]`
         """
 
-        old_prices: List[str]      = []
+        original_prices: List[str] = []
         discount_prices: List[str] = []
         amount_games_prices: int   = verify_amount(amount_games_prices)
 
@@ -130,13 +130,13 @@ class CrawlerNewReleases(Crawler):
             if("no_discount" in soup[index].get_attribute_list("class")):
                 discount_price = prices_div.contents[0]
                 
-                old_prices.append(None)
+                original_prices.append(None)
                 discount_prices.append(discount_price.contents[0])
             else:
-                old_price      = prices_div.contents[0]
+                original_price      = prices_div.contents[0]
                 discount_price = prices_div.contents[1]
 
-                old_prices.append(old_price.contents[0])
+                original_prices.append(original_price.contents[0])
                 discount_prices.append(discount_price.contents[0])
 
-        return old_prices, discount_prices
+        return original_prices, discount_prices

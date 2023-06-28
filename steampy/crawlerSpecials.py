@@ -104,12 +104,12 @@ class CrawlerSpecials(Crawler):
 
         Returns
         -------
-        old_prices: :class:`List[str | None]`
+        original_prices: :class:`List[str | None]`
         
         discount_prices: :class:`List[str | None]`
         """
 
-        old_prices: List[str]      = []
+        original_prices: List[str] = []
         discount_prices: List[str] = []
         amount_games_prices: int   = verify_amount(amount_games_prices)
 
@@ -123,12 +123,12 @@ class CrawlerSpecials(Crawler):
             search_price_div: BeautifulSoup = soup[index].contents
             
             if (len(search_price_div) == 4):
-                old_prices.append(search_price_div[1].contents[0].contents[0])
+                original_prices.append(search_price_div[1].contents[0].contents[0])
                 discount_prices.append(
                     remove_extra_whitespace(search_price_div[-1])
                 )
             else:
-                old_prices.append(None)
+                original_prices.append(None)
                 discount_prices.append(None)
 
-        return old_prices, discount_prices
+        return original_prices, discount_prices
