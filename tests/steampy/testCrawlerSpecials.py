@@ -8,8 +8,10 @@ if __name__ == "__main__":
 
     crawler: CrawlerSpecials = CrawlerSpecials()
 
-    gt = crawler.get_games_titles(url, language="brazilian")
-    gp1, gp2 = crawler.get_games_prices(url, currency="CAD")
+    # gt = crawler.get_games_titles(url, language="brazilian")
+    # gp1, gp2 = crawler.get_games_prices(url, currency="CAD")
+    gi = crawler.get_games_images(url, amount_games_images=3)
     
-    print(gt, len(gt))
-    print(gp2, len(gp2))
+    # print(gt, len(gt))
+    # print(gp2, len(gp2))
+    print(gi)

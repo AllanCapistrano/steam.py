@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Dict
 
 from bs4 import BeautifulSoup
 
 from .crawler import Crawler
-from .utils import remove_extra_whitespace, verify_amount
+from .utils import remove_extra_whitespace, verify_amount, sanitize_srcset
 from .services import is_available_language, format_currency
 
 class CrawlerSpecials(Crawler):
@@ -115,9 +115,9 @@ class CrawlerSpecials(Crawler):
 
         url                 = f"{url}&cc={format_currency(currency)}"
         soup: BeautifulSoup = self.reqUrl(url).find_all(
-                "div", 
-                class_="search_price"
-            )
+            "div", 
+            class_="search_price"
+        )
 
         for index in range(0, amount_games_prices):
             search_price_div: BeautifulSoup = soup[index].contents
@@ -132,3 +132,41 @@ class CrawlerSpecials(Crawler):
                 discount_prices.append(None)
 
         return original_prices, discount_prices
+
+    def get_games_images(
+        self, 
+        url: str, 
+        amount_games_images: int = 50
+    ) -> List [Dict[str, str]]:
+        """ Returns the 1x and 2x images of the games that are in 'Specials' 
+        list.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            Specials URL.
+
+        amount_games_images: :class:`int`
+            (Optional) The number of games images. The default is `50`.
+
+        Returns
+        -------
+        images: :class:`List[str | None]`
+        """
+        
+        images: List[Dict[str, str]] = []
+        amount_games_images: int     = verify_amount(amount_games_images)
+
+        soup: BeautifulSoup = self.reqUrl(url).find_all(
+            "div", 
+            class_="search_capsule"
+        )
+
+        for index in range(0, amount_games_images):
+            image_tag = soup[index].contents[0]
+            srcset    = image_tag.get_attribute_list('srcset')[0]
+            
+            image_url_1x, image_url_2x = sanitize_srcset(srcset)
+            images.append({"1x": image_url_1x, "2x": image_url_2x})    
+
+        return images
