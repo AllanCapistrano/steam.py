@@ -137,7 +137,7 @@ class CrawlerSpecials(Crawler):
         self, 
         url: str, 
         amount_games_images: int = 50
-    ) -> List [Dict[str, str]]:
+    ) -> List[Dict[str, str]]:
         """ Returns the 1x and 2x images of the games that are in 'Specials' 
         list.
 
@@ -151,7 +151,7 @@ class CrawlerSpecials(Crawler):
 
         Returns
         -------
-        images: :class:`List[str | None]`
+        images: :class:`List[Dict[str, str]]`
         """
         
         images: List[Dict[str, str]] = []
@@ -170,3 +170,37 @@ class CrawlerSpecials(Crawler):
             images.append({"1x": image_url_1x, "2x": image_url_2x})    
 
         return images
+
+    def get_games_urls(
+        self, 
+        url: str, 
+        amount_games_urls: int = 50
+    ) -> List[str]:
+        """ Returns the URLs of the games that are in 'Specials' list.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            Specials URL.
+
+        amount_games_urls: :class:`int`
+            (Optional) The number of games URLs. The default is `50`.
+
+        Returns
+        -------
+        urls: :class:`List[str]`
+        """
+
+        urls: List[str]        = []
+        amount_games_urls: int = verify_amount(amount_games_urls)
+
+        soup: BeautifulSoup = self.reqUrl(url).find(
+            "div", 
+            id="search_resultsRows"
+        )
+        a_tags: BeautifulSoup = soup.find_all("a")
+
+        for index in range(0, amount_games_urls):
+            urls.append(a_tags[index].get_attribute_list("href")[0])
+            
+        return urls

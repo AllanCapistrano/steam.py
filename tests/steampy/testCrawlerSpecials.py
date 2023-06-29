@@ -10,8 +10,10 @@ if __name__ == "__main__":
 
     # gt = crawler.get_games_titles(url, language="brazilian")
     # gp1, gp2 = crawler.get_games_prices(url, currency="CAD")
-    gi = crawler.get_games_images(url, amount_games_images=3)
-    
+    # gi = crawler.get_games_images(url, amount_games_images=3)
+    gu = crawler.get_games_urls(url)
+
     # print(gt, len(gt))
     # print(gp2, len(gp2))
-    print(gi)
+    # print(gi)
+    print(gu, len(gu))
