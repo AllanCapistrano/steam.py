@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 from bs4 import BeautifulSoup
 
@@ -140,3 +140,37 @@ class CrawlerNewReleases(Crawler):
                 discount_prices.append(discount_price.contents[0])
 
         return original_prices, discount_prices
+    
+    def get_games_urls(
+        self, 
+        url: str, 
+        amount_games_urls: int = 50
+    ) -> List[str]:
+        """ Returns the URLs of the games that are in 'New Releases' list.
+
+        Parameters
+        ----------
+        url: :class:`str`
+            New Releases URL.
+
+        amount_games_urls: :class:`int`
+            (Optional) The minimum number of games URLs. The default is `50`.
+
+        Returns
+        -------
+        urls: :class:`List[str]`
+        """
+
+        urls: List[str]        = []
+        amount_games_urls: int = verify_amount(amount_games_urls)
+
+        soup: BeautifulSoup = self.reqUrl(url).find(
+            "div", 
+            id="tab_newreleases_content"
+        )
+        a_tags: BeautifulSoup = soup.find_all("a")
+
+        for index in range(0, min(amount_games_urls, len(a_tags))):
+            urls.append(a_tags[index].get_attribute_list("href")[0])
+            
+        return urls
