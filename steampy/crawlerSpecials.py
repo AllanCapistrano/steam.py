@@ -21,7 +21,7 @@ class CrawlerSpecials(Crawler):
             Specials URL.
 
         amount_games_titles: :class:`int`
-            (Optional) The number of game titles. The default is `50`.
+            (Optional) The minimum number of game titles. The default is `50`.
 
         language: :class:`str`
             (Optional) Request language. The default is `english`.
@@ -40,7 +40,7 @@ class CrawlerSpecials(Crawler):
         url                 = f"{url}&l={language}"
         soup: BeautifulSoup = self.reqUrl(url).find_all("span", class_="title")
 
-        for index in range(0, amount_games_titles):
+        for index in range(0, min(amount_games_titles, len(soup))):
             titles.append(soup[index].contents[0])
 
         return titles
@@ -58,7 +58,7 @@ class CrawlerSpecials(Crawler):
             Specials URL.
 
         amount_games_discounts: :class:`int`
-            (Optional) The number of game discounts. The default is `50`.
+            (Optional) The minimum number of game discounts. The default is `50`.
 
         Returns
         -------
@@ -74,7 +74,7 @@ class CrawlerSpecials(Crawler):
             class_="search_discount"
         )
 
-        for index in range(0, amount_games_discounts):
+        for index in range(0, min(amount_games_discounts, len(soup))):
             if (len(soup[index].contents) == 3):
                 discount = soup[index].contents[1]
                 discounts.append(discount.contents[0])
@@ -97,7 +97,7 @@ class CrawlerSpecials(Crawler):
             Specials URL.
 
         amount_games_prices: :class:`int`
-            (Optional) The number of games prices. The default is `50`.
+            (Optional) The minimum number of games prices. The default is `50`.
 
         currency: :class:`str`
             (Optional) Request currency.
@@ -116,7 +116,7 @@ class CrawlerSpecials(Crawler):
             class_="search_price"
         )
 
-        for index in range(0, amount_games_prices):
+        for index in range(0, min(amount_games_prices, len(soup))):
             search_price_div: BeautifulSoup = soup[index].contents
             
             if (len(search_price_div) == 4):
@@ -153,7 +153,7 @@ class CrawlerSpecials(Crawler):
             Specials URL.
 
         amount_games_images: :class:`int`
-            (Optional) The number of games images. The default is `50`.
+            (Optional) The minimum number of games images. The default is `50`.
 
         Returns
         -------
@@ -168,7 +168,7 @@ class CrawlerSpecials(Crawler):
             class_="search_capsule"
         )
 
-        for index in range(0, amount_games_images):
+        for index in range(0, min(amount_games_images, len(soup))):
             image_tag = soup[index].contents[0]
             srcset    = image_tag.get_attribute_list('srcset')[0]
             
@@ -190,7 +190,7 @@ class CrawlerSpecials(Crawler):
             Specials URL.
 
         amount_games_urls: :class:`int`
-            (Optional) The number of games URLs. The default is `50`.
+            (Optional) The minimum number of games URLs. The default is `50`.
 
         Returns
         -------
@@ -206,7 +206,7 @@ class CrawlerSpecials(Crawler):
         )
         a_tags: BeautifulSoup = soup.find_all("a")
 
-        for index in range(0, amount_games_urls):
+        for index in range(0, min(amount_games_urls, len(a_tags))):
             urls.append(a_tags[index].get_attribute_list("href")[0])
             
         return urls
