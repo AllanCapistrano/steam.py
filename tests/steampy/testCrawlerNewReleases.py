@@ -8,16 +8,16 @@ if __name__ == "__main__":
 
     crawler: CrawlerNewReleases = CrawlerNewReleases()
 
-    # gt = crawler.get_games_titles(url)
+    games_titles = crawler.get_games_titles(url)
+    print(games_titles, len(games_titles), "\n")
 
-    # print(gt, len(gt))
+    games_discounts = crawler.get_games_discounts(url)
+    print(games_discounts, len(games_discounts), "\n")
 
-    # gp1, gp2 = crawler.get_games_prices(url)
+    games_original_prices, games_final_prices = crawler.get_games_prices(url)
     
-    # print(gp1)
-    # print()
-    # print(gp2)
+    print(games_original_prices, len(games_original_prices), "\n")
+    print(games_final_prices, len(games_final_prices), "\n")
 
-    gu = crawler.get_games_urls(url)
-
-    print(gu, len(gu))
+    games_urls = crawler.get_games_urls(url)
+    print(games_urls, len(games_urls))

@@ -3,7 +3,7 @@ from typing import List, Tuple, Dict
 from bs4 import BeautifulSoup
 
 from .crawler import Crawler
-from .utils import remove_extra_whitespace, verify_amount
+from .utils import verify_amount
 from .services import is_available_language, format_currency
 
 class CrawlerNewReleases(Crawler):
@@ -21,7 +21,7 @@ class CrawlerNewReleases(Crawler):
             New Releases URL.
 
         amount_games_titles: :class:`int`
-            (Optional) The number of game titles. The default is `50`.
+            (Optional) The minimum number of game titles. The default is `50`.
 
         language: :class:`str`
             (Optional) Request language. The default is `english`.
@@ -38,10 +38,14 @@ class CrawlerNewReleases(Crawler):
             language = "english"
 
         url                 = f"{url}?l={language}"
-        soup: BeautifulSoup = self.reqUrl(url).find_all("div", class_="tab_item_name")
+        soup: BeautifulSoup = self.reqUrl(url).find(
+            "div", 
+            id="tab_newreleases_content"
+        )
+        div_tags: BeautifulSoup = soup.find_all("div", class_="tab_item_name")
 
-        for index in range(0, amount_games_titles):
-            titles.append(soup[index].contents[0])
+        for index in range(0, min(amount_games_titles, len(div_tags))):
+            titles.append(div_tags[index].contents[0])
 
         return titles
 
@@ -58,7 +62,7 @@ class CrawlerNewReleases(Crawler):
             New Releases URL.
 
         amount_games_discounts: :class:`int`
-            (Optional) The number of game discounts. The default is `50`.
+            (Optional) The minimum number of game discounts. The default is `50`.
 
         Returns
         -------
@@ -66,19 +70,21 @@ class CrawlerNewReleases(Crawler):
         """
 
         discounts: List[str]        = []
-        amount_games_discounts: int = verify_amount(
-            amount_games_discounts
+        amount_games_discounts: int = verify_amount(amount_games_discounts)
+        soup: BeautifulSoup = self.reqUrl(url).find(
+            "div", 
+            id="tab_newreleases_content"
         )
-        soup: BeautifulSoup = self.reqUrl(url).find_all(
+        div_tags: BeautifulSoup = soup.find_all(
             "div", 
             class_="tab_item_discount"
         )
 
-        for index in range(0, amount_games_discounts):
-            if("no_discount" in soup[index].get_attribute_list("class")):
+        for index in range(0, min(amount_games_discounts, len(div_tags))):
+            if("no_discount" in div_tags[index].get_attribute_list("class")):
                 discounts.append(None)
             else:
-                discount = soup[index].contents[0]
+                discount = div_tags[index].contents[0]
                 discounts.append(discount.contents[0])
 
         return discounts
@@ -99,7 +105,7 @@ class CrawlerNewReleases(Crawler):
             New Releases URL.
 
         amount_games_prices: :class:`int`
-            (Optional) The number of games prices. The default is `50`.
+            (Optional) The minimum number of games prices. The default is `50`.
 
         language: :class:`str`
             (Optional) Request language. The default is `english`.
@@ -119,15 +125,19 @@ class CrawlerNewReleases(Crawler):
         amount_games_prices: int   = verify_amount(amount_games_prices)
 
         url                 = f"{url}?l={language}&cc={format_currency(currency)}"
-        soup: BeautifulSoup = self.reqUrl(url).find_all(
-                "div", 
-                class_="tab_item_discount"
-            )
+        soup: BeautifulSoup = self.reqUrl(url).find(
+            "div", 
+            id="tab_newreleases_content"
+        )
+        div_tags: BeautifulSoup = soup.find_all(
+            "div", 
+            class_="tab_item_discount"
+        )
 
-        for index in range(0, amount_games_prices):
-            prices_div = soup[index].contents[-1]
+        for index in range(0, min(amount_games_prices, len(div_tags))):
+            prices_div = div_tags[index].contents[-1]
             
-            if("no_discount" in soup[index].get_attribute_list("class")):
+            if("no_discount" in div_tags[index].get_attribute_list("class")):
                 discount_price = prices_div.contents[0]
                 
                 original_prices.append(None)
@@ -172,5 +182,7 @@ class CrawlerNewReleases(Crawler):
 
         for index in range(0, min(amount_games_urls, len(a_tags))):
             urls.append(a_tags[index].get_attribute_list("href")[0])
-            
+
+        urls.pop(-1) # Removing 'POPULAR NEW RELEASES' URL.
+
         return urls
