@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     crawler: CrawlerSpecials = CrawlerSpecials()
 
-    games_titles = crawler.get_games_titles(url, language="brazilian")
+    games_titles = crawler.get_games_titles(url)
     print(games_titles, len(games_titles), "\n")
 
     games_discounts = crawler.get_games_discounts(url)
@@ -17,7 +17,7 @@ if __name__ == "__main__":
     games_prices = crawler.get_games_prices(url, currency="BRL")
     print(games_prices, len(games_prices), "\n")
     
-    games_images = crawler.get_games_images(url, amount_games_images=3)
+    games_images = crawler.get_games_images(url)
     print(games_images, len(games_images), "\n")
     
     games_urls = crawler.get_games_urls(url)
