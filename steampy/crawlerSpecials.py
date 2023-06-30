@@ -88,7 +88,7 @@ class CrawlerSpecials(Crawler):
         url: str, 
         amount_games_prices: int = 50,
         currency: str = "USD"
-    ) -> Tuple[List[str | None], List[str | None]]:
+    ) -> List[Dict[str, str]]:
         """ Return the games old and discount prices that are in 'Specials' list.
 
         Parameters
@@ -104,14 +104,11 @@ class CrawlerSpecials(Crawler):
 
         Returns
         -------
-        original_prices: :class:`List[str | None]`
-        
-        discount_prices: :class:`List[str | None]`
+        games_prices: :class:`List[Dict[str, str]]`
         """
 
-        original_prices: List[str] = []
-        discount_prices: List[str] = []
-        amount_games_prices: int   = verify_amount(amount_games_prices)
+        games_prices: List[Dict[str, str]] = []
+        amount_games_prices: int           = verify_amount(amount_games_prices)
 
         url                 = f"{url}&cc={format_currency(currency)}"
         soup: BeautifulSoup = self.reqUrl(url).find_all(
@@ -123,15 +120,24 @@ class CrawlerSpecials(Crawler):
             search_price_div: BeautifulSoup = soup[index].contents
             
             if (len(search_price_div) == 4):
-                original_prices.append(search_price_div[1].contents[0].contents[0])
-                discount_prices.append(
-                    remove_extra_whitespace(search_price_div[-1])
+                games_prices.append(
+                    {
+                        "original_price": 
+                            search_price_div[1].contents[0].contents[0], 
+                        "discount_price": remove_extra_whitespace(
+                            search_price_div[-1]
+                        )
+                    }
                 )
             else:
-                original_prices.append(None)
-                discount_prices.append(None)
+                games_prices.append(
+                    {
+                        "original_price": None,
+                        "discount_price": None
+                    }
+                )
 
-        return original_prices, discount_prices
+        return games_prices
 
     def get_games_images(
         self, 
