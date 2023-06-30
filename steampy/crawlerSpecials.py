@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 from bs4 import BeautifulSoup
 
@@ -88,7 +88,7 @@ class CrawlerSpecials(Crawler):
         url: str, 
         amount_games_prices: int = 50,
         currency: str = "USD"
-    ) -> (List[str | None], List[str | None]):
+    ) -> Tuple[List[str | None], List[str | None]]:
         """ Return the games old and discount prices that are in 'Specials' list.
 
         Parameters
