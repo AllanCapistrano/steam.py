@@ -95,9 +95,9 @@ class CrawlerNewReleases(Crawler):
         amount_games_prices: int = 50,
         language: str = "english",
         currency: str = "USD"
-    ) -> Tuple[List[str | None], List[str | None]]:
-        """ Return the games old and discount prices that are in 'New Releases' 
-        list.
+    ) -> List[Dict[str, str]]:
+        """ Return the games original and discount prices that are in 
+        'New Releases' list.
 
         Parameters
         ----------
@@ -115,14 +115,11 @@ class CrawlerNewReleases(Crawler):
 
         Returns
         -------
-        original_prices: :class:`List[str | None]`
-        
-        discount_prices: :class:`List[str | None]`
+        games_prices: :class:`List[Dict[str, str]]`
         """
 
-        original_prices: List[str] = []
-        discount_prices: List[str] = []
-        amount_games_prices: int   = verify_amount(amount_games_prices)
+        games_prices: List[Dict[str, str]] = []
+        amount_games_prices: int           = verify_amount(amount_games_prices)
 
         url                 = f"{url}?l={language}&cc={format_currency(currency)}"
         soup: BeautifulSoup = self.reqUrl(url).find(
@@ -139,17 +136,25 @@ class CrawlerNewReleases(Crawler):
             
             if("no_discount" in div_tags[index].get_attribute_list("class")):
                 discount_price = prices_div.contents[0]
-                
-                original_prices.append(None)
-                discount_prices.append(discount_price.contents[0])
+
+                games_prices.append(
+                    {
+                        "original_price": None, 
+                        "discount_price": discount_price.contents[0]
+                    }
+                )
             else:
                 original_price = prices_div.contents[0]
                 discount_price = prices_div.contents[1]
 
-                original_prices.append(original_price.contents[0])
-                discount_prices.append(discount_price.contents[0])
+                games_prices.append(
+                    {
+                        "original_price": original_price.contents[0], 
+                        "discount_price": discount_price.contents[0]
+                    }
+                )
 
-        return original_prices, discount_prices
+        return games_prices
     
     def get_games_urls(
         self, 

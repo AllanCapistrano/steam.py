@@ -14,10 +14,9 @@ if __name__ == "__main__":
     games_discounts = crawler.get_games_discounts(url)
     print(games_discounts, len(games_discounts), "\n")
 
-    games_original_prices, games_final_prices = crawler.get_games_prices(url)
+    games_prices = crawler.get_games_prices(url)
     
-    print(games_original_prices, len(games_original_prices), "\n")
-    print(games_final_prices, len(games_final_prices), "\n")
+    print(games_prices, len(games_prices), "\n")
 
     games_urls = crawler.get_games_urls(url)
     print(games_urls, len(games_urls))
