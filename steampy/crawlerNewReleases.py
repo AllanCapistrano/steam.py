@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from bs4 import BeautifulSoup
 
@@ -89,7 +89,7 @@ class CrawlerNewReleases(Crawler):
         amount_games_prices: int = 50,
         language: str = "english",
         currency: str = "USD"
-    ) -> (List[str | None], List[str | None]):
+    ) -> Tuple[List[str | None], List[str | None]]:
         """ Return the games old and discount prices that are in 'New Releases' 
         list.
 
